@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>财务记录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/lib/css/homepage.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">虚拟币交易系统</a>
+            </div>
+        </div>
+    </nav>
+</div>
+<div>
+    <nav class="nav nav-tabs" style="margin-top:50px;background-color: #EEEEEE">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/virtual/admin/homepage">虚拟币市场</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/virtual/admin/trade">交易记录</a></li>
+                    <li class="active"><a href="/virtual/admin/finance">财务记录</a></li>
+                    <li class="active"><a href="/virtual/admin/user">用户信息</a></li>
+                </ul>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" style="color: #000000"><span th:text="${user.userName}+',欢迎您'"
+                                                             class="glyphicon glyphicon-user"></span>&nbsp;</a></li>
+                <li><a href="/virtual/index"><span class="glyphicon glyphicon-log-in"></span>&nbsp;退出</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="panel panel-default" style="width: 90%;margin-left: 5%">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="text-align:center">财务记录</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover" style="text-align:center">
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>类型</th>
+                <th>方式</th>
+                <th>数量</th>
+                <th>说明</th>
+                <th>创建日期</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="list: ${recordList}">
+                <td th:text="${list.uname}"></td>
+                <td th:if="${list.typeOne eq 1}">人民币</td>
+                <td th:if="${list.typeOne eq 2}">虚拟币</td>
+                <td th:if="${list.typeTwo eq 1}">充值</td>
+                <td th:if="${list.typeTwo eq 2}">提现</td>
+                <td th:if="${list.typeTwo eq 3}">转入</td>
+                <td th:if="${list.typeTwo eq 4}">转出</td>
+                <td th:if="${list.typeOne eq 1}"><span th:text="${list.amount} +'元'"></span></td>
+                <td th:if="${list.typeOne eq 2}"><span th:text="${list.amount} +'个'"></span></td>
+                <td th:text="${list.comment}"></td>
+                <td th:text="${list.createDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>财务中心</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/lib/css/homepage.css">
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<script th:inline="javascript">
+    var xx = /*[[${flag}]]*/;
+    if (xx == "false") {
+        alert("虚拟币余额不足");
+    }
+</script>
+<div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">虚拟币交易系统</a>
+            </div>
+        </div>
+    </nav>
+</div>
+<div>
+    <nav class="nav nav-tabs" style="margin-top:50px;background-color: #EEEEEE">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/virtual/homepage">财务中心</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            人民币
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-toggle="modal" data-target="#rmbPut">充值</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#rmbGet">提现</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            虚拟币
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-toggle="modal" data-target="#coinPut">转入</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#coinGet">转出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" style="color: #000000"><span th:text="${user.userName}+',欢迎您'"
+                                                             class="glyphicon glyphicon-user"></span>&nbsp;</a></li>
+                <li><a href="/virtual/index"><span class="glyphicon glyphicon-log-in"></span>&nbsp;退出</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="panel panel-default" style="width: 90%;margin-left: 5%">
+    <div class="panel-heading">
+        <h3 class="panel-title" style="text-align:center">财务记录</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover" style="text-align:center">
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>类型</th>
+                <th>方式</th>
+                <th>数量</th>
+                <th>说明</th>
+                <th>创建日期</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="list: ${recordList}">
+                <td th:text="${user.userName}"></td>
+                <td th:if="${list.typeOne eq 1}">人民币</td>
+                <td th:if="${list.typeOne eq 2}">虚拟币</td>
+                <td th:if="${list.typeTwo eq 1}">充值</td>
+                <td th:if="${list.typeTwo eq 2}">提现</td>
+                <td th:if="${list.typeTwo eq 3}">转入</td>
+                <td th:if="${list.typeTwo eq 4}">转出</td>
+                <td th:if="${list.typeOne eq 1}"><span th:text="${list.amount} +'元'"></span></td>
+                <td th:if="${list.typeOne eq 2}"><span th:text="${list.amount} +'个'"></span></td>
+                <td th:text="${list.comment}"></td>
+                <td th:text="${list.createDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id="rmbPut" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">人民币充值</h1>
+            </div>
+            <div class="modal-body">
+                <form id="form-rmbPut">
+                    <div class="form-group has-feedback">
+                        <label for="rmbPutAmount">充值金额(元)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <input id="rmbPutAmount" class="form-control" placeholder="请输入充值金额">
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="rmbPutType">充值方式</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <select  id="rmbPutType" class="form-control">
+                                <option value="支付宝">支付宝</option>
+                                <option value="微信" selected>微信</option>
+                            </select>
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="text-right">
+                        <button class="btn btn-primary" type="button" id="btn-rmbPut">充值</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="rmbGet" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">人民币提现</h1>
+            </div>
+            <div class="modal-body">
+                <form id="form-rmbGet">
+                    <div class="form-group has-feedback">
+                        <label for="rmbGetAmount">提现金额(元)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <input id="rmbGetAmount" class="form-control" placeholder="请输入提现金额">
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="rmbGetType">提现方式</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <select  id="rmbGetType" class="form-control">
+                                <option value="支付宝">支付宝</option>
+                                <option value="微信" selected>微信</option>
+                            </select>
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="text-right">
+                        <button class="btn btn-primary" type="button" id="btn-rmbGet">提现</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="coinPut" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">虚拟币转入</h1>
+            </div>
+            <div class="modal-body">
+                <form id="form-coinPut">
+                    <div class="form-group has-feedback">
+                        <label for="coinPutAmount">转入数量(个)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <input id="coinPutAmount" class="form-control" placeholder="请输入转入数量">
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="coinPutType">转入方式</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <select  id="coinPutType" class="form-control">
+                                <option value="游戏币">游戏币</option>
+                                <option value="机械币" selected>机械币</option>
+                            </select>
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="text-right">
+                        <button class="btn btn-primary" type="button" id="btn-coinPut">转入</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="coinGet" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">虚拟币转出</h1>
+            </div>
+            <div class="modal-body">
+                <form id="form-coinGet">
+                    <div class="form-group has-feedback">
+                        <label for="coinGetAmount">转出数量(个)</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <input id="coinGetAmount" class="form-control" placeholder="请输入转出数量">
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label for="coinGetType">转出方式</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>
+                            <select  id="coinGetType" class="form-control">
+                                <option value="游戏币">游戏币</option>
+                                <option value="机械币" selected>机械币</option>
+                            </select>
+                        </div>
+
+                        <span style="color:red;display: none;" class="tips"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+                        <span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+                    </div>
+
+                    <div class="text-right">
+                        <button class="btn btn-primary" type="button" id="btn-coinGet">转出</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/lib/js/finance.js"></script>
+</body>
+</html>
